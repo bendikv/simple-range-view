@@ -19,6 +19,8 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -941,6 +943,270 @@ open class SimpleRangeView @JvmOverloads constructor(
 
     enum class State {
         ACTIVE, ACTIVE_THUMB, FIXED, FIXED_THUMB, NORMAL
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        //begin boilerplate code that allows parent classes to save state
+        val superState = super.onSaveInstanceState()
+        val ss = SavedState(superState)
+        //end
+
+        ss.labelColor = this.labelColor
+        ss.activeLabelColor = this.activeLabelColor
+        ss.activeThumbLabelColor = this.activeThumbLabelColor
+        ss.fixedLabelColor = this.fixedLabelColor
+        ss.fixedThumbLabelColor = this.fixedThumbLabelColor
+        ss.lineColor = this.lineColor
+        ss.activeLineColor = this.activeLineColor
+        ss.fixedLineColor = this.fixedLineColor
+        ss.tickColor = this.tickColor
+        ss.activeTickColor = this.activeTickColor
+        ss.fixedTickColor = this.fixedTickColor
+        ss.activeThumbColor = this.activeThumbColor
+        ss.activeFocusThumbColor = this.activeFocusThumbColor
+        ss.fixedThumbColor = this.fixedThumbColor
+        ss.activeFocusThumbAlpha = this.activeFocusThumbAlpha
+        ss.lineThickness = this.lineThickness
+        ss.activeLineThickness = this.activeLineThickness
+        ss.fixedLineThickness = this.fixedLineThickness
+        ss.activeThumbRadius = this.activeThumbRadius
+        ss.activeThumbFocusRadius = this.activeThumbFocusRadius
+        ss.fixedThumbRadius = this.fixedThumbRadius
+        ss.tickRadius = this.tickRadius
+        ss.activeTickRadius = this.activeTickRadius
+        ss.fixedTickRadius = this.fixedTickRadius
+        ss.labelMarginBottom = this.labelMarginBottom
+        ss.labelFontSize = this.labelFontSize
+        ss.minDistanceBetweenLabels = this.minDistanceBetweenLabels
+        ss.innerRangePadding = this.innerRangePadding
+        ss.innerRangePaddingLeft = this.innerRangePaddingLeft
+        ss.innerRangePaddingRight = this.innerRangePaddingRight
+        ss.count = this.count
+        ss.startFixed = this.startFixed
+        ss.endFixed = this.endFixed
+        ss.start = this.start
+        ss.end = this.end
+        ss.minDistance = this.minDistance
+        ss.movable = this.movable
+        ss.showFixedLine = this.showFixedLine
+        ss.showTicks = this.showTicks
+        ss.showActiveTicks = this.showActiveTicks
+        ss.showFixedTicks = this.showFixedTicks
+        ss.showLabels = this.showLabels
+
+        return ss
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable) {
+        //begin boilerplate code so parent classes can restore state
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+        
+        super.onRestoreInstanceState(state.superState)
+        //end
+
+        this.labelColor = state.labelColor
+        this.activeLabelColor = state.activeLabelColor
+        this.activeThumbLabelColor = state.activeThumbLabelColor
+        this.fixedLabelColor = state.fixedLabelColor
+        this.fixedThumbLabelColor = state.fixedThumbLabelColor
+        this.lineColor = state.lineColor
+        this.activeLineColor = state.activeLineColor
+        this.fixedLineColor = state.fixedLineColor
+        this.tickColor = state.tickColor
+        this.activeTickColor = state.activeTickColor
+        this.fixedTickColor = state.fixedTickColor
+        this.activeThumbColor = state.activeThumbColor
+        this.activeFocusThumbColor = state.activeFocusThumbColor
+        this.fixedThumbColor = state.fixedThumbColor
+        this.activeFocusThumbAlpha = state.activeFocusThumbAlpha
+        this.lineThickness = state.lineThickness
+        this.activeLineThickness = state.activeLineThickness
+        this.fixedLineThickness = state.fixedLineThickness
+        this.activeThumbRadius = state.activeThumbRadius
+        this.activeThumbFocusRadius = state.activeThumbFocusRadius
+        this.fixedThumbRadius = state.fixedThumbRadius
+        this.tickRadius = state.tickRadius
+        this.activeTickRadius = state.activeTickRadius
+        this.fixedTickRadius = state.fixedTickRadius
+        this.labelMarginBottom = state.labelMarginBottom
+        this.labelFontSize = state.labelFontSize
+        this.minDistanceBetweenLabels = state.minDistanceBetweenLabels
+        this.innerRangePadding = state.innerRangePadding
+        this.innerRangePaddingLeft = state.innerRangePaddingLeft
+        this.innerRangePaddingRight = state.innerRangePaddingRight
+        this.count = state.count
+        this.startFixed = state.startFixed
+        this.endFixed = state.endFixed
+        this.start = state.start
+        this.end = state.end
+        this.minDistance = state.minDistance
+        this.movable = state.movable
+        this.showFixedLine = state.showFixedLine
+        this.showTicks = state.showTicks
+        this.showActiveTicks = state.showActiveTicks
+        this.showFixedTicks = state.showFixedTicks
+        this.showLabels = state.showLabels
+    }
+
+    internal class SavedState : BaseSavedState {
+        var labelColor: Int = 0
+        var activeLabelColor: Int = 0
+        var activeThumbLabelColor: Int = 0
+        var fixedLabelColor: Int = 0
+        var fixedThumbLabelColor: Int = 0
+        var lineColor: Int = 0
+        var activeLineColor: Int = 0
+        var fixedLineColor: Int = 0
+        var tickColor: Int = 0
+        var activeTickColor: Int = 0
+        var fixedTickColor: Int = 0
+        var activeThumbColor: Int = 0
+        var activeFocusThumbColor: Int = 0
+        var fixedThumbColor: Int = 0
+        var activeFocusThumbAlpha: Float = 0f
+        var lineThickness: Float = 0f
+        var activeLineThickness: Float = 0f
+        var fixedLineThickness: Float = 0f
+        var activeThumbRadius: Float = 0f
+        var activeThumbFocusRadius: Float = 0f
+        var fixedThumbRadius: Float = 0f
+        var tickRadius: Float = 0f
+        var activeTickRadius: Float = 0f
+        var fixedTickRadius: Float = 0f
+        var labelMarginBottom: Float = 0f
+        var labelFontSize: Float = 0f
+        var minDistanceBetweenLabels: Float = 0f
+        var innerRangePadding: Float = 0f
+        var innerRangePaddingLeft: Float = 0f
+        var innerRangePaddingRight: Float = 0f
+        var count: Int = 0
+        var startFixed: Int = 0
+        var endFixed: Int = 0
+        var start: Int = 0
+        var end: Int = 0
+        var minDistance: Int = 0
+
+        var movable: Boolean = false
+        var showFixedLine: Boolean = false
+        var showTicks: Boolean = false
+        var showActiveTicks: Boolean = false
+        var showFixedTicks: Boolean = false
+        var showLabels: Boolean = false
+
+        constructor(superState: Parcelable) : super(superState) {
+        }
+
+
+        private constructor(input: Parcel) : super(input) {
+            this.labelColor = input.readInt()
+            this.activeLabelColor = input.readInt()
+            this.activeThumbLabelColor = input.readInt()
+            this.fixedLabelColor = input.readInt()
+            this.fixedThumbLabelColor = input.readInt()
+
+            this.lineColor = input.readInt()
+            this.activeLineColor = input.readInt()
+            this.fixedLineColor = input.readInt()
+            this.tickColor = input.readInt()
+            this.activeTickColor = input.readInt()
+            this.fixedTickColor = input.readInt()
+            this.activeThumbColor = input.readInt()
+            this.activeFocusThumbColor = input.readInt()
+            this.fixedThumbColor = input.readInt()
+
+            this.activeFocusThumbAlpha = input.readFloat()
+
+            this.lineThickness = input.readFloat()
+            this.activeLineThickness = input.readFloat()
+            this.fixedLineThickness = input.readFloat()
+            this.activeThumbRadius = input.readFloat()
+            this.activeThumbFocusRadius = input.readFloat()
+            this.fixedThumbRadius = input.readFloat()
+            this.tickRadius = input.readFloat()
+            this.activeTickRadius = input.readFloat()
+            this.fixedTickRadius = input.readFloat()
+            this.labelMarginBottom = input.readFloat()
+            this.labelFontSize = input.readFloat()
+            this.minDistanceBetweenLabels = input.readFloat()
+            this.innerRangePadding = input.readFloat()
+            this.innerRangePaddingLeft = input.readFloat()
+            this.innerRangePaddingRight = input.readFloat()
+
+            this.count = input.readInt()
+            this.startFixed = input.readInt()
+            this.endFixed = input.readInt()
+            this.start = input.readInt()
+            this.end = input.readInt()
+            this.minDistance = input.readInt()
+
+            this.movable = input.readInt() == 1
+            this.showFixedLine = input.readInt() == 1
+            this.showTicks = input.readInt() == 1
+            this.showActiveTicks = input.readInt() == 1
+            this.showFixedTicks = input.readInt() == 1
+            this.showLabels = input.readInt() == 1
+        }
+
+        override fun writeToParcel(output: Parcel, flags: Int) {
+            super.writeToParcel(output, flags)
+            output.writeInt(this.labelColor)
+            output.writeInt(this.activeLabelColor)
+            output.writeInt(this.activeThumbLabelColor)
+            output.writeInt(this.fixedLabelColor)
+            output.writeInt(this.fixedThumbLabelColor)
+            output.writeInt(this.lineColor)
+            output.writeInt(this.activeLineColor)
+            output.writeInt(this.fixedLineColor)
+            output.writeInt(this.tickColor)
+            output.writeInt(this.activeTickColor)
+            output.writeInt(this.fixedTickColor)
+            output.writeInt(this.activeThumbColor)
+            output.writeInt(this.activeFocusThumbColor)
+            output.writeInt(this.fixedThumbColor)
+            output.writeFloat(this.activeFocusThumbAlpha)
+            output.writeFloat(this.lineThickness)
+            output.writeFloat(this.activeLineThickness)
+            output.writeFloat(this.fixedLineThickness)
+            output.writeFloat(this.activeThumbRadius)
+            output.writeFloat(this.activeThumbFocusRadius)
+            output.writeFloat(this.fixedThumbRadius)
+            output.writeFloat(this.tickRadius)
+            output.writeFloat(this.activeTickRadius)
+            output.writeFloat(this.fixedTickRadius)
+            output.writeFloat(this.labelMarginBottom)
+            output.writeFloat(this.labelFontSize)
+            output.writeFloat(this.minDistanceBetweenLabels)
+            output.writeFloat(this.innerRangePadding)
+            output.writeFloat(this.innerRangePaddingLeft)
+            output.writeFloat(this.innerRangePaddingRight)
+            output.writeInt(this.count)
+            output.writeInt(this.startFixed)
+            output.writeInt(this.endFixed)
+            output.writeInt(this.start)
+            output.writeInt(this.end)
+            output.writeInt(this.minDistance)
+            output.writeInt(if (this.movable) 1 else 0)
+            output.writeInt(if (this.showFixedLine) 1 else 0)
+            output.writeInt(if (this.showTicks) 1 else 0)
+            output.writeInt(if (this.showActiveTicks) 1 else 0)
+            output.writeInt(if (this.showFixedTicks) 1 else 0)
+            output.writeInt(if (this.showLabels) 1 else 0)
+        }
+
+        companion object {
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(input: Parcel): SavedState {
+                    return SavedState(input)
+                }
+
+                override fun newArray(size: Int): Array<SavedState?> {
+                    return arrayOfNulls(size)
+                }
+            }
+        }
     }
 
     //
