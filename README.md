@@ -9,7 +9,7 @@ SimpleRangeView is custom view component for Android, written in Kotlin, that pr
 
 ```groovy
 dependencies {
-	compile 'me.bendik.simplerangeview:simplerangeview:0.1.0'
+	compile 'me.bendik.simplerangeview:simplerangeview:0.1.1'
 }
 ```
 
@@ -170,7 +170,7 @@ Change Log
 TODO
 =======
 - [ ] Get default colors from material and appcompat themes
-- [ ] Handle onSaveInstanceState / onRestoreInstanceState
+- [x] Handle onSaveInstanceState / onRestoreInstanceState
 - [ ] Implement minimal distance between two active range labels (?)
 
 License
