@@ -53,6 +53,13 @@ public class BasicExampleFragment extends Fragment implements SimpleRangeView.On
         fixedRangeView = (SimpleRangeView) view.findViewById(R.id.fixed_rangeview);
         rangeView.setOnRangeLabelsListener(this);
         rangeView.setOnTrackRangeListener(this);
+
+        rangeView.setActiveLineColor(getResources().getColor(R.color.colorAccent));
+        rangeView.setActiveThumbColor(getResources().getColor(R.color.colorAccent));
+        rangeView.setActiveLabelColor(getResources().getColor(R.color.colorAccent));
+        rangeView.setActiveThumbLabelColor(getResources().getColor(R.color.colorAccent));
+        rangeView.setActiveFocusThumbColor(getResources().getColor(R.color.colorAccent));
+        rangeView.setActiveFocusThumbAlpha(0.26f);
     }
 
     @Nullable @Override

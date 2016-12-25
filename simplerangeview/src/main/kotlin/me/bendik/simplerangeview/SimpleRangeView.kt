@@ -33,30 +33,35 @@ open class SimpleRangeView @JvmOverloads constructor(
     var labelColor = DEFAULT_LABEL_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeLabelColor = DEFAULT_ACTIVE_LABEL_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeThumbLabelColor = DEFAULT_ACTIVE_THUMB_LABEL_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var fixedLabelColor = DEFAULT_FIXED_LABEL_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var fixedThumbLabelColor = DEFAULT_FIXED_THUMB_LABEL_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
     
@@ -64,60 +69,70 @@ open class SimpleRangeView @JvmOverloads constructor(
     var lineColor = DEFAULT_LINE_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeLineColor = DEFAULT_ACTIVE_LINE_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var fixedLineColor = DEFAULT_FIXED_LINE_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var tickColor = DEFAULT_TICK_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeTickColor = DEFAULT_ACTIVE_TICK_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var fixedTickColor = DEFAULT_FIXED_TICK_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeThumbColor = DEFAULT_ACTIVE_THUMB_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeFocusThumbColor = DEFAULT_ACTIVE_FOCUS_THUMB_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var fixedThumbColor = DEFAULT_FIXED_THUMB_COLOR
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
     var activeFocusThumbAlpha: Float = DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA
         set(value) {
             field = value
+            initPaints()
             invalidate()
         }
 
@@ -609,7 +624,7 @@ open class SimpleRangeView @JvmOverloads constructor(
     protected open fun drawActiveThumb(canvas: Canvas, i: Int, size: ValueWrapper<Float>) {
         val x = getPositionX(i)
 
-        // Отрисовываем фокус
+        // Draw focus
         if (size.value > 0f) {
             canvas.drawCircle(x, getPositionY(), size.value, paintActiveFocusThumb)
         }
