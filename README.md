@@ -164,6 +164,7 @@ final SimpleRangeView rangeView = new SimpleRangeView.Builder(this)
 Change Log
 =======
 ```
+0.1.1 - Bugfixes & Handle Instance State
 0.1 - Initial release
 ```
 
