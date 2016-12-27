@@ -25,6 +25,8 @@ import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import kotlin.properties.Delegates
+import kotlin.properties.ReadWriteProperty
 
 open class SimpleRangeView @JvmOverloads constructor(
         context: Context,
@@ -32,251 +34,37 @@ open class SimpleRangeView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    var labelColor = DEFAULT_LABEL_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
+    var labelColor by updatePaintsAndRedraw(DEFAULT_LABEL_COLOR)
+    var activeLabelColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_LABEL_COLOR)
+    var activeThumbLabelColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_THUMB_LABEL_COLOR)
+    var fixedLabelColor by updatePaintsAndRedraw(DEFAULT_FIXED_LABEL_COLOR)
+    var fixedThumbLabelColor by updatePaintsAndRedraw(DEFAULT_FIXED_THUMB_LABEL_COLOR)
+    var lineColor by updatePaintsAndRedraw(DEFAULT_LINE_COLOR)
+    var activeLineColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_LINE_COLOR)
+    var fixedLineColor by updatePaintsAndRedraw(DEFAULT_FIXED_LINE_COLOR)
+    var tickColor by updatePaintsAndRedraw(DEFAULT_TICK_COLOR)
+    var activeTickColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_TICK_COLOR)
+    var fixedTickColor by updatePaintsAndRedraw(DEFAULT_FIXED_TICK_COLOR)
+    var activeThumbColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_THUMB_COLOR)
+    var activeFocusThumbColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_FOCUS_THUMB_COLOR)
+    var fixedThumbColor by updatePaintsAndRedraw(DEFAULT_FIXED_THUMB_COLOR)
+    var activeFocusThumbAlpha by updatePaintsAndRedraw(DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA)
 
-    var activeLabelColor = DEFAULT_ACTIVE_LABEL_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
+    var lineThickness by updateView(0f)
+    var activeLineThickness by updateView(0f)
+    var fixedLineThickness by updateView(0f)
+    var tickRadius by updateView(0f)
+    var activeThumbFocusRadius by updateView(0f)
+    var activeThumbRadius by updateView(0f)
+    var activeTickRadius by updateView(0f)
+    var fixedThumbRadius by updateView(0f)
+    var fixedTickRadius by updateView(0f)
+    var labelFontSize by updateView(0f)
+    var labelMarginBottom by updateView(0f)
+    var minDistanceBetweenLabels by updateView(0f)
 
-    var activeThumbLabelColor = DEFAULT_ACTIVE_THUMB_LABEL_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var fixedLabelColor = DEFAULT_FIXED_LABEL_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var fixedThumbLabelColor = DEFAULT_FIXED_THUMB_LABEL_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-    
-    
-    var lineColor = DEFAULT_LINE_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var activeLineColor = DEFAULT_ACTIVE_LINE_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var fixedLineColor = DEFAULT_FIXED_LINE_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var tickColor = DEFAULT_TICK_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var activeTickColor = DEFAULT_ACTIVE_TICK_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var fixedTickColor = DEFAULT_FIXED_TICK_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var activeThumbColor = DEFAULT_ACTIVE_THUMB_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var activeFocusThumbColor = DEFAULT_ACTIVE_FOCUS_THUMB_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var fixedThumbColor = DEFAULT_FIXED_THUMB_COLOR
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var activeFocusThumbAlpha: Float = DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA
-        set(value) {
-            field = value
-            initPaints()
-            invalidate()
-        }
-
-    var lineThickness = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var activeLineThickness = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var fixedLineThickness = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var tickRadius = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var activeThumbFocusRadius = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var activeThumbRadius = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var activeTickRadius = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var fixedThumbRadius = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var fixedTickRadius = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var labelFontSize = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var count = DEFAULT_COUNT
-        set(value) {
-            field = value
-            invalidate()
-        }
-    var start = DEFAULT_START
-        set(value) {
-            field = closestValidPosition(value)
-            invalidate()
-        }
-    var end = DEFAULT_END
-        set(value) {
-            field = closestValidPosition(value)
-            invalidate()
-        }
-    var minDistance = DEFAULT_MINIMAL_DISTANCE
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var movable = DEFAULT_MOVABLE
-
-    var showFixedLine = DEFAULT_SHOW_FIXED_LINE
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var startFixed = DEFAULT_START_FIXED
-        set(value) {
-            field = value
-            start = start
-            invalidate()
-        }
-
-    var endFixed = DEFAULT_END_FIXED
-        set(value) {
-            field = value
-            end = end
-            invalidate()
-        }
-
-    var showTicks = DEFAULT_SHOW_TICKS
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var showActiveTicks = DEFAULT_SHOW_ACTIVE_TICKS
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var showFixedTicks = DEFAULT_SHOW_FIXED_TICKS
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var showLabels = DEFAULT_SHOW_LABELS
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var labelMarginBottom = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
-    var minDistanceBetweenLabels = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-
+    var innerRangePaddingLeft by updateView(0f)
+    var innerRangePaddingRight by updateView(0f)
     var innerRangePadding = 0f
         set(value) {
             field = value
@@ -284,17 +72,20 @@ open class SimpleRangeView @JvmOverloads constructor(
             innerRangePaddingRight = value
         }
 
-    var innerRangePaddingLeft = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
-    var innerRangePaddingRight = 0f
-        set(value) {
-            field = value
-            updateView()
-        }
+    var count by redraw(DEFAULT_COUNT) {  closestValidPosition(it) }
+    var start by redraw(DEFAULT_START) {  closestValidPosition(it) }
+    var end by redraw(DEFAULT_END) {  closestValidPosition(it) }
+    var minDistance by redraw(DEFAULT_MINIMAL_DISTANCE)
 
+    var startFixed by redraw(DEFAULT_START_FIXED)
+    var endFixed by redraw(DEFAULT_END_FIXED)
+
+    var movable = DEFAULT_MOVABLE
+    var showFixedLine by redraw(DEFAULT_SHOW_FIXED_LINE)
+    var showTicks by redraw(DEFAULT_SHOW_TICKS)
+    var showActiveTicks by redraw(DEFAULT_SHOW_ACTIVE_TICKS)
+    var showFixedTicks by redraw(DEFAULT_SHOW_FIXED_TICKS)
+    var showLabels by redraw(DEFAULT_SHOW_LABELS)
 
     // Callbacks
 
@@ -791,11 +582,6 @@ open class SimpleRangeView @JvmOverloads constructor(
         return  xDiff <= activeThumbRadius && yDiff <= activeThumbRadius
     }
 
-    private fun updateView() {
-        initPaints()
-        requestLayout()
-    }
-
     private fun getTextRect(text: String, paint: Paint): Rect {
         val rect = Rect()
         paint.getTextBounds(text, 0, text.length, rect)
@@ -1210,6 +996,33 @@ open class SimpleRangeView @JvmOverloads constructor(
     }
 
     //
+    // Delegated properties
+    //
+
+    private fun <T> updatePaintsAndRedraw(initialValue: T): ReadWriteProperty<SimpleRangeView, T> {
+        return Delegates.observable(initialValue) { property, oldValue, newValue ->
+            initPaints()
+            invalidate()
+            true
+        }
+    }
+
+    private fun <T> redraw(initialValue: T, f: (v: T) -> T = { it }): ReadWriteProperty<SimpleRangeView, T> {
+        return convertable(initialValue, f) { property, oldValue, newValue ->
+            invalidate()
+            true
+        }
+    }
+
+    private fun <T> updateView(initialValue: T): ReadWriteProperty<SimpleRangeView, T> {
+        return Delegates.observable(initialValue) { property, oldValue, newValue ->
+            initPaints()
+            requestLayout()
+            true
+        }
+    }
+
+    //
     // Callbacks
     //
 
@@ -1526,4 +1339,3 @@ open class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_LABEL_FONT_SIZE = 12f
     }
 }
-
