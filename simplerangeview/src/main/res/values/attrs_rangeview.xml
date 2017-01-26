@@ -42,6 +42,7 @@
         <attr name="endFixed" format="integer" />
         <attr name="count" format="integer" />
         <attr name="minDistance" format="integer" />
+        <attr name="maxDistance" format="integer" />
 
         <attr name="movable" format="boolean" />
         <attr name="showFixedLine" format="boolean" />
