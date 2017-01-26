@@ -72,10 +72,11 @@ open class SimpleRangeView @JvmOverloads constructor(
             innerRangePaddingRight = value
         }
 
-    var count by redraw(DEFAULT_COUNT) {  closestValidPosition(it) }
+    var count by redraw(DEFAULT_COUNT)
     var start by redraw(DEFAULT_START) {  closestValidPosition(it) }
     var end by redraw(DEFAULT_END) {  closestValidPosition(it) }
     var minDistance by redraw(DEFAULT_MINIMAL_DISTANCE)
+    var maxDistance by redraw(DEFAULT_MAXIMAL_DISTANCE)
 
     var startFixed by redraw(DEFAULT_START_FIXED)
     var endFixed by redraw(DEFAULT_END_FIXED)
@@ -173,6 +174,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             start = styledAttrs.getInt(R.styleable.SimpleRangeView_start, start)
             end = styledAttrs.getInt(R.styleable.SimpleRangeView_end, end)
             minDistance = styledAttrs.getInt(R.styleable.SimpleRangeView_minDistance, minDistance)
+            maxDistance = styledAttrs.getInt(R.styleable.SimpleRangeView_maxDistance, maxDistance)
 
             movable = styledAttrs.getBoolean(R.styleable.SimpleRangeView_movable, movable)
             showFixedLine = styledAttrs.getBoolean(R.styleable.SimpleRangeView_showFixedLine, showFixedLine)
@@ -504,25 +506,27 @@ open class SimpleRangeView @JvmOverloads constructor(
                 }
 
                 if (!isStartPressed && !isEndPressed) {
+                    // Check for moving range
                     if ((getPositionByXCoord(x) in start until end) && movable) {
                         isRangeMoving = true
                         linePosToStart = getPositionByXCoord(x) - start
-                    } else {
-                        val tmpX = closestValidPosition(getPositionByXCoord(x))
-                        val xS = Math.abs(tmpX - start)
-                        val xE = Math.abs(tmpX - end)
+                        return true
+                    }
 
-                        if (xS < xE && ((end-tmpX) >= minDistance)) {
-                            start = tmpX
-                            isStartPressed = true
-                            fadeIn(currentLeftFocusRadiusPx, activeThumbFocusRadius)
-                            onTrackRangeListener?.onStartRangeChanged(this, start)
-                        } else if (xS >= xE && ((tmpX-start) >= minDistance)) {
-                            end = tmpX
-                            isEndPressed = true
-                            fadeIn(currentRightFocusRadiusPx, activeThumbFocusRadius)
-                            onTrackRangeListener?.onEndRangeChanged(this, end)
-                        }
+                    val tmpX = closestValidPosition(getPositionByXCoord(x))
+                    val xS = Math.abs(tmpX - start)
+                    val xE = Math.abs(tmpX - end)
+
+                    if (xS < xE && ((end-tmpX) >= getMinimalDistance()) && ((end-tmpX) <= getMaximalDistance())) {
+                        start = tmpX
+                        isStartPressed = true
+                        fadeIn(currentLeftFocusRadiusPx, activeThumbFocusRadius)
+                        onTrackRangeListener?.onStartRangeChanged(this, start)
+                    } else if (xS >= xE && ((tmpX-start) >= getMinimalDistance()) && ((tmpX-start) <= getMaximalDistance())) {
+                        end = tmpX
+                        isEndPressed = true
+                        fadeIn(currentRightFocusRadiusPx, activeThumbFocusRadius)
+                        onTrackRangeListener?.onEndRangeChanged(this, end)
                     }
                     return true
                 }
@@ -571,10 +575,13 @@ open class SimpleRangeView @JvmOverloads constructor(
 
     private fun isPressed(pos: Int) = (pos == start && isStartPressed) || (pos == end && isEndPressed)
     private fun validatePosition(pos: Int) = if (showFixedLine) pos >= startFixed && pos <= endFixed else pos >= 0 && pos < count
-    private fun validatePositionForStart(pos: Int) = validatePosition(pos) && (pos <= end-minDistance)
-    private fun validatePositionForEnd(pos: Int) = validatePosition(pos) && (pos >= start+minDistance)
+    private fun validatePositionForStart(pos: Int) = validatePosition(pos) && (pos <= end-getMinimalDistance() && pos >= end-getMaximalDistance())
+    private fun validatePositionForEnd(pos: Int) = validatePosition(pos) && (pos >= start+getMinimalDistance() && pos <= start+getMaximalDistance())
 
     private fun getPositionByXCoord(x: Float) = ((x-innerRangePaddingLeft) / stepPx).toInt()
+
+    private fun getMaximalDistance() = if (maxDistance > 0) maxDistance else count
+    private fun getMinimalDistance() = if (minDistance > 0) minDistance else 0
 
     private fun isInTargetZone(pos: Int, x: Float, y: Float): Boolean {
         val xDiff = Math.abs(x - getPositionX(pos))
@@ -773,6 +780,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         ss.start = this.start
         ss.end = this.end
         ss.minDistance = this.minDistance
+        ss.maxDistance = this.maxDistance
         ss.movable = this.movable
         ss.showFixedLine = this.showFixedLine
         ss.showTicks = this.showTicks
@@ -829,6 +837,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         this.start = state.start
         this.end = state.end
         this.minDistance = state.minDistance
+        this.maxDistance = state.maxDistance
         this.movable = state.movable
         this.showFixedLine = state.showFixedLine
         this.showTicks = state.showTicks
@@ -874,6 +883,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         var start: Int = 0
         var end: Int = 0
         var minDistance: Int = 0
+        var maxDistance: Int = 0
 
         var movable: Boolean = false
         var showFixedLine: Boolean = false
@@ -927,6 +937,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             this.start = input.readInt()
             this.end = input.readInt()
             this.minDistance = input.readInt()
+            this.maxDistance = input.readInt()
 
             this.movable = input.readInt() == 1
             this.showFixedLine = input.readInt() == 1
@@ -974,6 +985,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeInt(this.start)
             output.writeInt(this.end)
             output.writeInt(this.minDistance)
+            output.writeInt(this.maxDistance)
             output.writeInt(if (this.movable) 1 else 0)
             output.writeInt(if (this.showFixedLine) 1 else 0)
             output.writeInt(if (this.showTicks) 1 else 0)
@@ -1230,6 +1242,11 @@ open class SimpleRangeView @JvmOverloads constructor(
             return this
         }
 
+        fun maxDistance(value: Int): Builder {
+            rangeView.maxDistance = value
+            return this
+        }
+
         fun showFixedLine(value: Boolean): Builder {
             rangeView.showFixedLine = value
             return this
@@ -1320,8 +1337,9 @@ open class SimpleRangeView @JvmOverloads constructor(
 
         val DEFAULT_COUNT = 10
         val DEFAULT_START = 0
-        val DEFAULT_END = 9
+        val DEFAULT_END = DEFAULT_COUNT - 1
         val DEFAULT_MINIMAL_DISTANCE = 1
+        val DEFAULT_MAXIMAL_DISTANCE = 0
 
         val DEFAULT_START_FIXED = 0
         val DEFAULT_END_FIXED = 0

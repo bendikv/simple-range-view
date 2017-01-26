@@ -40,6 +40,7 @@ Developers can customize the following attributes (both via XML and programmatic
 | start        | integer   | Start of active range             | 0 |
 | end        | integer   | End of active range             | 9 |
 | minDistance        | integer   | Minimal active range length             | 1 |
+| maxDistance        | integer   | Maximal active range length             | 0 ~ count |
 | startFixed        | integer   | Start of fixed range             | 0 |
 | endFixed        | integer   | End of fixed range             | 0 |
 
