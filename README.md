@@ -26,7 +26,10 @@ Developers can customize the following attributes (both via XML and programmatic
 | name                        |  format   | description               | default value |
 | :--------------------------:| :------:  | :-----------:             | :-----------: |
 | lineColor            | color     | Range bar color          | #F7F7F7       |
+| activeLineColorMode            | integer     | Active range bar coloring (solid or gradient)          | 0 (ColorMode.SOLID)       |
 | activeLineColor            | color     | Active range bar color          | #0C6CE1       |
+| activeLineGradientStart            | color     | Active range bar gradient start color          | #0C6CE1       |
+| activeLineGradientEnd           | color     | Active range bar gradient end color          | #0C6CE1       |
 | fixedLineColor            | color     | Fixed range bar color          | #E3E3E3       |
 | lineThickness        | dimension   | Range bar thickness             | 4 |
 | activeLineThickness        | dimension   | Active range bar thickness             | 6 |

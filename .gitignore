@@ -26,3 +26,9 @@ captures/
 .gradle/
 .idea/
 build/kotlin-build/
+app/app.iml
+build/
+gradle/
+gradlew
+gradlew.bat
+simplerangeview/simplerangeview.iml
