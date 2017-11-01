@@ -67,7 +67,6 @@ open class SimpleRangeView @JvmOverloads constructor(
             invalidate()
         }
     
-    
     var lineColor = DEFAULT_LINE_COLOR
         set(value) {
             field = value
@@ -75,7 +74,28 @@ open class SimpleRangeView @JvmOverloads constructor(
             invalidate()
         }
 
+    var activeLineColorMode = DEFAULT_LINE_COLOR_MODE
+        set(value) {
+            field = value
+            initPaints()
+            invalidate()
+        }
+
     var activeLineColor = DEFAULT_ACTIVE_LINE_COLOR
+        set(value) {
+            field = value
+            initPaints()
+            invalidate()
+        }
+
+    var activeLineGradientStart = DEFAULT_LINE_COLOR
+        set(value) {
+            field = value
+            initPaints()
+            invalidate()
+        }
+
+    var activeLineGradientEnd = DEFAULT_LINE_COLOR
         set(value) {
             field = value
             initPaints()
@@ -349,7 +369,10 @@ open class SimpleRangeView @JvmOverloads constructor(
             fixedThumbLabelColor = styledAttrs.getColor(R.styleable.SimpleRangeView_fixedThumbLabelColor, fixedThumbLabelColor)
 
             lineColor = styledAttrs.getColor(R.styleable.SimpleRangeView_lineColor, lineColor)
+            activeLineColorMode = styledAttrs.getInt(R.styleable.SimpleRangeView_activeLineColorMode, activeLineColorMode)
             activeLineColor = styledAttrs.getColor(R.styleable.SimpleRangeView_activeLineColor, activeLineColor)
+            activeLineGradientStart = styledAttrs.getColor(R.styleable.SimpleRangeView_activeLineGradientStart, activeLineGradientStart)
+            activeLineGradientEnd = styledAttrs.getColor(R.styleable.SimpleRangeView_activeLineGradientEnd, activeLineGradientEnd)
             fixedLineColor = styledAttrs.getColor(R.styleable.SimpleRangeView_fixedLineColor, fixedLineColor)
             tickColor = styledAttrs.getColor(R.styleable.SimpleRangeView_tickColor, tickColor)
             activeTickColor = styledAttrs.getColor(R.styleable.SimpleRangeView_activeTickColor, activeTickColor)
@@ -433,7 +456,6 @@ open class SimpleRangeView @JvmOverloads constructor(
 
         paintActive = Paint(Paint.ANTI_ALIAS_FLAG)
         paintActive.style = Paint.Style.FILL
-        paintActive.color = activeLineColor
 
         paintTick = Paint(Paint.ANTI_ALIAS_FLAG)
         paintTick.style = Paint.Style.FILL
@@ -620,6 +642,14 @@ open class SimpleRangeView @JvmOverloads constructor(
     }
 
     protected open fun drawActiveLine(canvas: Canvas, x: Float, y: Float, w: Float, h: Float) {
+        if (activeLineColorMode == ColorMode.SOLID)
+            paintActive.color = activeLineColor
+        else
+            paintActive.shader = LinearGradient(x, y, x + w, y + h,
+                    activeLineGradientStart,
+                    activeLineGradientEnd,
+                    Shader.TileMode.MIRROR)
+
         drawLine(canvas, x, y, w, h, paintActive)
     }
 
@@ -1013,7 +1043,10 @@ open class SimpleRangeView @JvmOverloads constructor(
         this.fixedLabelColor = state.fixedLabelColor
         this.fixedThumbLabelColor = state.fixedThumbLabelColor
         this.lineColor = state.lineColor
+        this.activeLineColorMode = state.activeLineColorMode
         this.activeLineColor = state.activeLineColor
+        this.activeLineGradientStart = state.activeLineGradientStart
+        this.activeLineGradientEnd = state.activeLineGradientEnd
         this.fixedLineColor = state.fixedLineColor
         this.tickColor = state.tickColor
         this.activeTickColor = state.activeTickColor
@@ -1058,7 +1091,10 @@ open class SimpleRangeView @JvmOverloads constructor(
         var fixedLabelColor: Int = 0
         var fixedThumbLabelColor: Int = 0
         var lineColor: Int = 0
+        var activeLineColorMode: Int = 0
         var activeLineColor: Int = 0
+        var activeLineGradientStart: Int = 0
+        var activeLineGradientEnd: Int = 0
         var fixedLineColor: Int = 0
         var tickColor: Int = 0
         var activeTickColor: Int = 0
@@ -1108,7 +1144,10 @@ open class SimpleRangeView @JvmOverloads constructor(
             this.fixedThumbLabelColor = input.readInt()
 
             this.lineColor = input.readInt()
+            this.activeLineColorMode = input.readInt()
             this.activeLineColor = input.readInt()
+            this.activeLineGradientStart = input.readInt()
+            this.activeLineGradientEnd = input.readInt()
             this.fixedLineColor = input.readInt()
             this.tickColor = input.readInt()
             this.activeTickColor = input.readInt()
@@ -1158,7 +1197,10 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeInt(this.fixedLabelColor)
             output.writeInt(this.fixedThumbLabelColor)
             output.writeInt(this.lineColor)
+            output.writeInt(this.activeLineColorMode)
             output.writeInt(this.activeLineColor)
+            output.writeInt(this.activeLineGradientStart)
+            output.writeInt(this.activeLineGradientEnd)
             output.writeInt(this.fixedLineColor)
             output.writeInt(this.tickColor)
             output.writeInt(this.activeTickColor)
@@ -1267,8 +1309,23 @@ open class SimpleRangeView @JvmOverloads constructor(
             return this
         }
 
+        fun activeLineColorMode(colorMode: Int): Builder {
+            rangeView.activeLineColorMode = colorMode
+            return this
+        }
+
         fun activeLineColor(color: Int): Builder {
             rangeView.activeLineColor = color
+            return this
+        }
+
+        fun activeLineGradientStart(color: Int): Builder {
+            rangeView.activeLineGradientStart = color
+            return this
+        }
+
+        fun activeLineGradientEnd(color: Int): Builder {
+            rangeView.activeLineGradientEnd = color
             return this
         }
 
@@ -1477,6 +1534,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_FIXED_LABEL_COLOR = Color.parseColor("#C5C5C5")
         val DEFAULT_FIXED_THUMB_LABEL_COLOR = Color.parseColor("#C5C5C5")
 
+        val DEFAULT_LINE_COLOR_MODE = ColorMode.SOLID
         val DEFAULT_LINE_COLOR = Color.parseColor("#F7F7F7")
         val DEFAULT_ACTIVE_LINE_COLOR = Color.parseColor("#0C6CE1")
         val DEFAULT_FIXED_LINE_COLOR = Color.parseColor("#E3E3E3")
@@ -1524,6 +1582,11 @@ open class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_MINIMAL_DISTANCE_BETWEEN_LABELS = 20f // TODO
 
         val DEFAULT_LABEL_FONT_SIZE = 12f
+    }
+
+    object ColorMode {
+        val SOLID = 0
+        val GRADIENT = 1
     }
 }
 

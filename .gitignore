@@ -23,3 +23,6 @@ captures/
 # Keystore files
 *.jks
 .DS_Store
+.gradle/
+.idea/
+build/kotlin-build/

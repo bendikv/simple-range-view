@@ -120,5 +120,26 @@
             app:end="8"
             app:minDistance="3"
             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="RangeView with gradient active line"/>
+
+        <me.bendik.simplerangeview.SimpleRangeView
+            android:id="@+id/rangeview_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:count="10"
+            app:start="0"
+            app:end="10"
+            app:minDistance="1"
+            app:activeLineColorMode="gradient"
+            app:activeLineGradientStart="@color/colorAccent"
+            app:activeLineGradientEnd="@color/colorPrimary"
+            />
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
