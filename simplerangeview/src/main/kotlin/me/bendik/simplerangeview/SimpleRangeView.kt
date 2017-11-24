@@ -16,6 +16,7 @@
 package me.bendik.simplerangeview
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
@@ -331,6 +332,7 @@ open class SimpleRangeView @JvmOverloads constructor(
                 val x = getPositionX(i)
                 canvas.drawCircle(x, getPositionY(), tickRadius, paintTick)
             }
+            
             for (i in right until count) {
                 val x = getPositionX(i)
                 canvas.drawCircle(x, getPositionY(), tickRadius, paintTick)
@@ -342,6 +344,7 @@ open class SimpleRangeView @JvmOverloads constructor(
                 val x = getPositionX(i)
                 canvas.drawCircle(x, getPositionY(), fixedTickRadius, paintFixedTick)
             }
+
             for (i in end until endFixed) {
                 val x = getPositionX(i)
                 canvas.drawCircle(x, getPositionY(), fixedTickRadius, paintFixedTick)
@@ -437,7 +440,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         }
     }
 
-    private fun getPositionX(i: Int): Float = (innerRangePaddingLeft + stepPx * i).toFloat()
+    private fun getPositionX(i: Int): Float = (innerRangePaddingLeft + stepPx * i)
     private fun getPositionY() = posY
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -570,7 +573,7 @@ open class SimpleRangeView @JvmOverloads constructor(
     }
 
     private fun isPressed(pos: Int) = (pos == start && isStartPressed) || (pos == end && isEndPressed)
-    private fun validatePosition(pos: Int) = if (showFixedLine) pos >= startFixed && pos <= endFixed else pos >= 0 && pos < count
+    private fun validatePosition(pos: Int) = if (showFixedLine) pos in startFixed..endFixed else pos in 0..(count - 1)
     private fun validatePositionForStart(pos: Int) = validatePosition(pos) && (pos <= end-minDistance)
     private fun validatePositionForEnd(pos: Int) = validatePosition(pos) && (pos >= start+minDistance)
 
@@ -595,25 +598,21 @@ open class SimpleRangeView @JvmOverloads constructor(
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
         val desiredHeight = calcDesiredHeight()
-        var desiredWidth = calcDesiredWidth()
+        val desiredWidth = calcDesiredWidth()
 
         var width: Int
         var height: Int
 
-        if (widthMode === MeasureSpec.EXACTLY) {
-            width = widthSize
-        } else if (widthMode === MeasureSpec.AT_MOST) {
-            width = Math.min(desiredWidth, widthSize)
-        } else {
-            width = desiredWidth
+        width = when (widthMode) {
+            MeasureSpec.EXACTLY -> widthSize
+            MeasureSpec.AT_MOST -> Math.min(desiredWidth, widthSize)
+            else -> desiredWidth
         }
 
-        if (heightMode === MeasureSpec.EXACTLY) {
-            height = heightSize
-        } else if (heightMode === MeasureSpec.AT_MOST) {
-            height = Math.min(desiredHeight, heightSize)
-        } else {
-            height = desiredHeight
+        height = when (heightMode) {
+            MeasureSpec.EXACTLY -> heightSize
+            MeasureSpec.AT_MOST -> Math.min(desiredHeight, heightSize)
+            else -> desiredHeight
         }
 
         if (width < 0) {
@@ -627,9 +626,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         setMeasuredDimension(width, height)
     }
 
-    private fun calcDesiredWidth(): Int {
-        return 0
-    }
+    private fun calcDesiredWidth(): Int = 0
 
     private fun calcMaxRadius() = listOf(tickRadius, fixedTickRadius, activeTickRadius, activeThumbRadius, fixedThumbRadius, activeThumbFocusRadius).max()!!
 
@@ -671,7 +668,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             value.value = (animatedValue as Float) * (normalValue)
             ViewCompat.postInvalidateOnAnimation(this@SimpleRangeView)
         }
-        addListener(object : SimpleAnimatorListener() {
+        addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 value.value = normalValue
                 removeAllListeners()
@@ -689,7 +686,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             ViewCompat.postInvalidateOnAnimation(this@SimpleRangeView)
         }
 
-        addListener(object : SimpleAnimatorListener() {
+        addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 value.value = 0f
                 removeAllListeners()
@@ -704,28 +701,7 @@ open class SimpleRangeView @JvmOverloads constructor(
     // Internal classes
     //
 
-    class ValueWrapper<T>(var value: T) {
-        // Empty body
-    }
-
-    open class SimpleAnimatorListener : Animator.AnimatorListener {
-        override fun onAnimationRepeat(animation: Animator?) {
-            // no-op
-        }
-
-        override fun onAnimationEnd(animation: Animator?) {
-            // no-op
-        }
-
-        override fun onAnimationCancel(animation: Animator?) {
-            // no-op
-        }
-
-        override fun onAnimationStart(animation: Animator?) {
-            // no-op
-        }
-
-    }
+    class ValueWrapper<T>(var value: T)
 
     enum class State {
         ACTIVE, ACTIVE_THUMB, FIXED, FIXED_THUMB, NORMAL
@@ -882,9 +858,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         var showFixedTicks: Boolean = false
         var showLabels: Boolean = false
 
-        constructor(superState: Parcelable) : super(superState) {
-        }
-
+        constructor(superState: Parcelable) : super(superState)
 
         private constructor(input: Parcel) : super(input) {
             this.labelColor = input.readInt()
@@ -1000,25 +974,22 @@ open class SimpleRangeView @JvmOverloads constructor(
     //
 
     private fun <T> updatePaintsAndRedraw(initialValue: T): ReadWriteProperty<SimpleRangeView, T> {
-        return Delegates.observable(initialValue) { property, oldValue, newValue ->
+        return Delegates.observable(initialValue) { _, _, _ ->
             initPaints()
             invalidate()
-            true
         }
     }
 
     private fun <T> redraw(initialValue: T, f: (v: T) -> T = { it }): ReadWriteProperty<SimpleRangeView, T> {
-        return convertable(initialValue, f) { property, oldValue, newValue ->
+        return convertable(initialValue, f) { _, _, _ ->
             invalidate()
-            true
         }
     }
 
     private fun <T> updateView(initialValue: T): ReadWriteProperty<SimpleRangeView, T> {
-        return Delegates.observable(initialValue) { property, oldValue, newValue ->
+        return Delegates.observable(initialValue) { _, _, _ ->
             initPaints()
             requestLayout()
-            true
         }
     }
 
