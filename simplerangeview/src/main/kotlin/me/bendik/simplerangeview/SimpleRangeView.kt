@@ -1043,239 +1043,339 @@ open class SimpleRangeView @JvmOverloads constructor(
     // Builder
     //
 
-    class Builder(context: Context) {
-        private var rangeView: SimpleRangeView
+    class Builder(private val context: Context) {
+        private var labelColor: Int? = null
+        private var activeLabelColor: Int? = null
+        private var activeThumbLabelColor: Int? = null
+        private var fixedLabelColor: Int? = null
+        private var fixedThumbLabelColor: Int? = null
+        private var lineColor: Int? = null
+        private var activeLineColor: Int? = null
+        private var fixedLineColor: Int? = null
+        private var tickColor: Int? = null
+        private var activeTickColor: Int? = null
+        private var fixedTickColor: Int? = null
+        private var activeThumbColor: Int? = null
+        private var activeFocusThumbColor: Int? = null
+        private var fixedThumbColor: Int? = null
+        private var activeFocusThumbAlpha: Float? = null
 
-        init {
-            rangeView = SimpleRangeView(context)
-        }
+        private var lineThickness: Float? = null
+        private var activeLineThickness: Float? = null
+        private var fixedLineThickness: Float? = null
+        private var tickRadius: Float? = null
+        private var activeThumbFocusRadius: Float? = null
+        private var activeThumbRadius: Float? = null
+        private var activeTickRadius: Float? = null
+        private var fixedThumbRadius: Float? = null
+        private var fixedTickRadius: Float? = null
+        private var labelFontSize: Float? = null
+        private var labelMarginBottom: Float? = null
+        private var minDistanceBetweenLabels: Float? = null
+
+        private var innerRangePaddingLeft: Float? = null
+        private var innerRangePaddingRight: Float? = null
+        private var innerRangePadding: Float? = null
+
+        private var count: Int? = null
+        private var start: Int? = null
+        private var end: Int? = null
+        private var minDistance: Int? = null
+
+        private var startFixed: Int? = null
+        private var endFixed: Int? = null
+
+        private var movable: Boolean? = null
+        private var showFixedLine: Boolean? = null
+        private var showTicks: Boolean? = null
+        private var showActiveTicks: Boolean? = null
+        private var showFixedTicks: Boolean? = null
+        private var showLabels: Boolean? = null
+
+        private var onChangeRangeListener: OnChangeRangeListener? = null
+        private var onRangeLabelsListener: OnRangeLabelsListener? = null
+        private var onTrackRangeListener: OnTrackRangeListener? = null
 
         fun labelColor(color: Int): Builder {
-            rangeView.labelColor = color
+            labelColor = color
             return this
         }
 
         fun activeLabelColor(color: Int): Builder {
-            rangeView.activeLabelColor = color
+            activeLabelColor = color
             return this
         }
 
         fun activeThumbLabelColor(color: Int): Builder {
-            rangeView.activeThumbLabelColor = color
+            activeThumbLabelColor = color
             return this
         }
 
         fun fixedLabelColor(color: Int): Builder {
-            rangeView.fixedLabelColor = color
+            fixedLabelColor = color
             return this
         }
 
         fun fixedThumbLabelColor(color: Int): Builder {
-            rangeView.fixedThumbLabelColor = color
+            fixedThumbLabelColor = color
             return this
         }
 
         fun lineColor(color: Int): Builder {
-            rangeView.lineColor = color
+            lineColor = color
             return this
         }
 
         fun activeLineColor(color: Int): Builder {
-            rangeView.activeLineColor = color
+            activeLineColor = color
             return this
         }
 
         fun fixedLineColor(color: Int): Builder {
-            rangeView.fixedLineColor = color
+            fixedLineColor = color
             return this
         }
 
         fun tickColor(color: Int): Builder {
-            rangeView.tickColor = color
+            tickColor = color
             return this
         }
 
         fun activeTickColor(color: Int): Builder {
-            rangeView.activeTickColor = color
+            activeTickColor = color
             return this
         }
 
         fun fixedTickColor(color: Int): Builder {
-            rangeView.fixedTickColor = color
+            fixedTickColor = color
             return this
         }
 
         fun activeThumbColor(color: Int): Builder {
-            rangeView.activeThumbColor = color
+            activeThumbColor = color
             return this
         }
 
         fun activeFocusThumbColor(color: Int): Builder {
-            rangeView.activeFocusThumbColor = color
+            activeFocusThumbColor = color
             return this
         }
 
         fun fixedThumbColor(color: Int): Builder {
-            rangeView.fixedThumbColor = color
+            fixedThumbColor = color
             return this
         }
 
         fun activeFocusThumbAlpha(alpha: Float): Builder {
-            rangeView.activeFocusThumbAlpha = alpha
+            activeFocusThumbAlpha = alpha
             return this
         }
 
         fun lineThickness(px: Float): Builder {
-            rangeView.lineThickness = px
+            lineThickness = px
             return this
         }
 
         fun activeLineThickness(px: Float): Builder {
-            rangeView.activeLineThickness = px
+            activeLineThickness = px
             return this
         }
 
         fun fixedLineThickness(px: Float): Builder {
-            rangeView.fixedLineThickness = px
+            fixedLineThickness = px
             return this
         }
 
         fun activeThumbFocusRadius(px: Float): Builder {
-            rangeView.activeThumbFocusRadius = px
+            activeThumbFocusRadius = px
             return this
         }
 
         fun activeThumbRadius(px: Float): Builder {
-            rangeView.activeThumbRadius = px
+            activeThumbRadius = px
             return this
         }
 
         fun fixedThumbRadius(px: Float): Builder {
-            rangeView.fixedThumbRadius = px
+            fixedThumbRadius = px
             return this
         }
 
         fun tickRadius(px: Float): Builder {
-            rangeView.tickRadius = px
+            tickRadius = px
             return this
         }
 
         fun activeTickRadius(px: Float): Builder {
-            rangeView.activeTickRadius = px
+            activeTickRadius = px
             return this
         }
 
         fun fixedTickRadius(px: Float): Builder {
-            rangeView.fixedTickRadius = px
+            fixedTickRadius = px
             return this
         }
 
         fun innerRangePadding(px: Float): Builder {
-            rangeView.innerRangePadding = px
+            innerRangePadding = px
             return this
         }
 
         fun innerRangePaddingLeft(px: Float): Builder {
-            rangeView.innerRangePaddingLeft = px
+            innerRangePaddingLeft = px
             return this
         }
 
         fun innerRangePaddingRight(px: Float): Builder {
-            rangeView.innerRangePaddingRight = px
+            innerRangePaddingRight = px
             return this
         }
 
         fun labelMarginBottom(px: Float): Builder {
-            rangeView.labelMarginBottom = px
+            labelMarginBottom = px
             return this
         }
 
         fun minDistanceBetweenLabels(px: Float): Builder {
-            rangeView.minDistanceBetweenLabels = px
+            minDistanceBetweenLabels = px
             return this
         }
 
         fun labelFontSize(px: Float): Builder {
-            rangeView.labelFontSize = px
+            labelFontSize = px
             return this
         }
 
         fun count(value: Int): Builder {
-            rangeView.count = value
+            count = value
             return this
         }
 
         fun start(value: Int): Builder {
-            rangeView.start = value
+            start = value
             return this
         }
 
         fun end(value: Int): Builder {
-            rangeView.end = value
+            end = value
             return this
         }
 
         fun startFixed(value: Int): Builder {
-            rangeView.startFixed = value
+            startFixed = value
             return this
         }
 
         fun endFixed(value: Int): Builder {
-            rangeView.endFixed = value
+            endFixed = value
             return this
         }
 
         fun minDistance(value: Int): Builder {
-            rangeView.minDistance = value
+            minDistance = value
             return this
         }
 
         fun showFixedLine(value: Boolean): Builder {
-            rangeView.showFixedLine = value
+            showFixedLine = value
             return this
         }
 
         fun movable(value: Boolean): Builder {
-            rangeView.movable = value
+            movable = value
             return this
         }
 
         fun showTicks(value: Boolean): Builder {
-            rangeView.showTicks = value
+            showTicks = value
             return this
         }
 
         fun showActiveTicks(value: Boolean): Builder {
-            rangeView.showActiveTicks = value
+            showActiveTicks = value
             return this
         }
 
         fun showFixedTicks(value: Boolean): Builder {
-            rangeView.showFixedTicks = value
+            showFixedTicks = value
             return this
         }
 
         fun showLabels(value: Boolean): Builder {
-            rangeView.showLabels = value
+            showLabels = value
             return this
         }
 
         fun onChangeRangeListener(listener: OnChangeRangeListener): Builder {
-            rangeView.onChangeRangeListener = listener
+            onChangeRangeListener = listener
             return this
         }
 
         fun onRangeLabelsListener(listener: OnRangeLabelsListener): Builder {
-            rangeView.onRangeLabelsListener = listener
+            onRangeLabelsListener = listener
             return this
         }
 
         fun onTrackRangeListener(listener: OnTrackRangeListener): Builder {
-            rangeView.onTrackRangeListener = listener
+            onTrackRangeListener = listener
             return this
         }
 
-        fun build() = rangeView
+        fun build(): SimpleRangeView {
+            val rangeView = SimpleRangeView(context)
+
+            rangeView.count = count ?: rangeView.count
+            rangeView.start = start ?: rangeView.start
+            rangeView.end = end ?: rangeView.end
+            rangeView.startFixed = startFixed ?: rangeView.startFixed
+            rangeView.endFixed = endFixed ?: rangeView.endFixed
+            rangeView.showFixedLine = showFixedLine ?: rangeView.showFixedLine
+            rangeView.minDistance = minDistance ?: rangeView.minDistance
+            rangeView.movable = movable ?: rangeView.movable
+            rangeView.showLabels = showLabels ?: rangeView.showLabels
+            rangeView.showTicks = showTicks ?: rangeView.showTicks
+            rangeView.showFixedTicks = showFixedTicks ?: rangeView.showFixedTicks
+            rangeView.showActiveTicks = showActiveTicks ?: rangeView.showActiveTicks
+
+            rangeView.labelColor = labelColor ?: rangeView.labelColor
+            rangeView.activeLabelColor = activeLabelColor ?: rangeView.activeLabelColor
+            rangeView.activeThumbLabelColor = activeThumbLabelColor ?: rangeView.activeThumbLabelColor
+            rangeView.fixedLabelColor = fixedLabelColor ?: rangeView.fixedLabelColor
+            rangeView.fixedThumbLabelColor = fixedThumbLabelColor ?: rangeView.fixedThumbLabelColor
+            rangeView.lineColor = lineColor ?: rangeView.lineColor
+            rangeView.activeLineColor = activeLineColor ?: rangeView.activeLineColor
+            rangeView.fixedLineColor = fixedLineColor ?: rangeView.fixedLineColor
+            rangeView.tickColor = tickColor ?: rangeView.tickColor
+            rangeView.activeTickColor = activeTickColor ?: rangeView.activeTickColor
+            rangeView.fixedTickColor = fixedTickColor ?: rangeView.fixedTickColor
+            rangeView.activeThumbColor = activeThumbColor ?: rangeView.activeThumbColor
+            rangeView.activeFocusThumbColor = activeFocusThumbColor ?: rangeView.activeFocusThumbColor
+            rangeView.fixedThumbColor = fixedThumbColor ?: rangeView.fixedThumbColor
+            rangeView.activeFocusThumbAlpha = activeFocusThumbAlpha ?: rangeView.activeFocusThumbAlpha
+
+            rangeView.lineThickness = lineThickness ?: rangeView.lineThickness
+            rangeView.activeLineThickness = activeLineThickness ?: rangeView.activeLineThickness
+            rangeView.fixedLineThickness = fixedLineThickness ?: rangeView.fixedLineThickness
+            rangeView.tickRadius = tickRadius ?: rangeView.tickRadius
+            rangeView.activeThumbFocusRadius = activeThumbFocusRadius ?: rangeView.activeThumbFocusRadius
+            rangeView.activeThumbRadius = activeThumbRadius ?: rangeView.activeThumbRadius
+            rangeView.activeTickRadius = activeTickRadius ?: rangeView.activeTickRadius
+            rangeView.fixedThumbRadius = fixedThumbRadius ?: rangeView.fixedThumbRadius
+            rangeView.fixedTickRadius = fixedTickRadius ?: rangeView.fixedTickRadius
+            rangeView.labelFontSize = labelFontSize ?: rangeView.labelFontSize
+            rangeView.labelMarginBottom = labelMarginBottom ?: rangeView.labelMarginBottom
+            rangeView.minDistanceBetweenLabels = minDistanceBetweenLabels ?: rangeView.minDistanceBetweenLabels
+
+            rangeView.innerRangePaddingLeft = innerRangePaddingLeft ?: rangeView.innerRangePaddingLeft
+            rangeView.innerRangePaddingRight = innerRangePaddingRight ?: rangeView.innerRangePaddingRight
+            rangeView.innerRangePadding = innerRangePadding ?: rangeView.innerRangePadding
+
+            rangeView.onRangeLabelsListener = onRangeLabelsListener
+            rangeView.onChangeRangeListener = onChangeRangeListener
+            rangeView.onTrackRangeListener = onTrackRangeListener
+
+            return rangeView
+        }
     }
 
     //
