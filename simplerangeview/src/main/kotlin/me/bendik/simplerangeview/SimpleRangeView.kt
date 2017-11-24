@@ -332,7 +332,7 @@ open class SimpleRangeView @JvmOverloads constructor(
                 val x = getPositionX(i)
                 canvas.drawCircle(x, getPositionY(), tickRadius, paintTick)
             }
-            
+
             for (i in right until count) {
                 val x = getPositionX(i)
                 canvas.drawCircle(x, getPositionY(), tickRadius, paintTick)
@@ -765,7 +765,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             super.onRestoreInstanceState(state)
             return
         }
-        
+
         super.onRestoreInstanceState(state.superState)
         //end
 
@@ -858,9 +858,9 @@ open class SimpleRangeView @JvmOverloads constructor(
         var showFixedTicks: Boolean = false
         var showLabels: Boolean = false
 
-        constructor(superState: Parcelable) : super(superState)
+        internal constructor(superState: Parcelable) : super(superState)
 
-        private constructor(input: Parcel) : super(input) {
+        private constructor(input: Parcel, classLoader: ClassLoader) : super(input, classLoader) {
             this.labelColor = input.readInt()
             this.activeLabelColor = input.readInt()
             this.activeThumbLabelColor = input.readInt()
@@ -917,6 +917,7 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeInt(this.activeThumbLabelColor)
             output.writeInt(this.fixedLabelColor)
             output.writeInt(this.fixedThumbLabelColor)
+
             output.writeInt(this.lineColor)
             output.writeInt(this.activeLineColor)
             output.writeInt(this.fixedLineColor)
@@ -926,7 +927,9 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeInt(this.activeThumbColor)
             output.writeInt(this.activeFocusThumbColor)
             output.writeInt(this.fixedThumbColor)
+
             output.writeFloat(this.activeFocusThumbAlpha)
+
             output.writeFloat(this.lineThickness)
             output.writeFloat(this.activeLineThickness)
             output.writeFloat(this.fixedLineThickness)
@@ -942,12 +945,14 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeFloat(this.innerRangePadding)
             output.writeFloat(this.innerRangePaddingLeft)
             output.writeFloat(this.innerRangePaddingRight)
+
             output.writeInt(this.count)
             output.writeInt(this.startFixed)
             output.writeInt(this.endFixed)
             output.writeInt(this.start)
             output.writeInt(this.end)
             output.writeInt(this.minDistance)
+
             output.writeInt(if (this.movable) 1 else 0)
             output.writeInt(if (this.showFixedLine) 1 else 0)
             output.writeInt(if (this.showTicks) 1 else 0)
@@ -957,14 +962,11 @@ open class SimpleRangeView @JvmOverloads constructor(
         }
 
         companion object {
-            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-                override fun createFromParcel(input: Parcel): SavedState {
-                    return SavedState(input)
-                }
-
-                override fun newArray(size: Int): Array<SavedState?> {
-                    return arrayOfNulls(size)
-                }
+            @JvmField
+            val CREATOR: Parcelable.ClassLoaderCreator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
+                override fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
+                override fun createFromParcel(input: Parcel): SavedState? = null
+                override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
             }
         }
     }
