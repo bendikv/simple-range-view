@@ -9,7 +9,7 @@ SimpleRangeView is custom view component for Android, written in Kotlin, that pr
 
 ```groovy
 dependencies {
-	compile 'me.bendik.simplerangeview:simplerangeview:0.1.1'
+	compile 'me.bendik.simplerangeview:simplerangeview:0.2.0'
 }
 ```
 
@@ -165,6 +165,7 @@ final SimpleRangeView rangeView = new SimpleRangeView.Builder(this)
 Change Log
 =======
 ```
+0.2 - Bugfixes, Refactoring & maxDistance attribute
 0.1.1 - Bugfixes & Handle Instance State
 0.1 - Initial release
 ```
