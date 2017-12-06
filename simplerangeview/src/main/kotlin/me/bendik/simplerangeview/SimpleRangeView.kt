@@ -371,9 +371,9 @@ open class SimpleRangeView @JvmOverloads constructor(
                 when(i) {
                     start, end -> drawLabel(canvas, x, i, State.ACTIVE_THUMB, paintActiveThumbText)
                     in start+1 until end -> drawLabel(canvas, x, i, State.ACTIVE, paintActiveText)
+                    in 0 until left, in right until count -> drawLabel(canvas, x, i, State.NORMAL, paintText)
                     startFixed, endFixed -> drawLabel(canvas, x, i, State.FIXED_THUMB, paintFixedThumbText)
                     in startFixed until start, in end until endFixed -> drawLabel(canvas, x, i, State.FIXED, paintFixedText)
-                    in 0 until left, in right until count -> drawLabel(canvas, x, i, State.NORMAL, paintText)
                 }
             }
         }
