@@ -1,7 +1,8 @@
 SimpleRangeView
 =======
-[![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Download](https://api.bintray.com/packages/bendikv/my_libraries/simple-range-view/images/download.svg) ](https://bintray.com/bendikv/my_libraries/simple-range-view/_latestVersion)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Simple%20Range%20View-blue.svg?style=flat)](https://android-arsenal.com/details/1/4836)
 
 SimpleRangeView is custom view component for Android, written in Kotlin, that provides for the selection of a range of discrete values designated by tick marks.
 
