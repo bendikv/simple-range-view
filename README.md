@@ -1,7 +1,8 @@
 SimpleRangeView
 =======
-[![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Download](https://api.bintray.com/packages/bendikv/my_libraries/simple-range-view/images/download.svg) ](https://bintray.com/bendikv/my_libraries/simple-range-view/_latestVersion)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Simple%20Range%20View-blue.svg?style=flat)](https://android-arsenal.com/details/1/4836)
 
 SimpleRangeView is custom view component for Android, written in Kotlin, that provides for the selection of a range of discrete values designated by tick marks.
 
@@ -9,7 +10,7 @@ SimpleRangeView is custom view component for Android, written in Kotlin, that pr
 
 ```groovy
 dependencies {
-	compile 'me.bendik.simplerangeview:simplerangeview:0.1.1'
+	compile 'me.bendik.simplerangeview:simplerangeview:0.2.0'
 }
 ```
 
@@ -43,6 +44,7 @@ Developers can customize the following attributes (both via XML and programmatic
 | start        | integer   | Start of active range             | 0 |
 | end        | integer   | End of active range             | 9 |
 | minDistance        | integer   | Minimal active range length             | 1 |
+| maxDistance        | integer   | Maximal active range length             | 0 ~ count |
 | startFixed        | integer   | Start of fixed range             | 0 |
 | endFixed        | integer   | End of fixed range             | 0 |
 
@@ -167,6 +169,7 @@ final SimpleRangeView rangeView = new SimpleRangeView.Builder(this)
 Change Log
 =======
 ```
+0.2 - Bugfixes, Refactoring & maxDistance attribute
 0.1.1 - Bugfixes & Handle Instance State
 0.1 - Initial release
 ```

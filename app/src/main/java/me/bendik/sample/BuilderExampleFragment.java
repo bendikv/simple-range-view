@@ -23,6 +23,8 @@ public class BuilderExampleFragment extends Fragment implements SimpleRangeView.
     EditText editCount;
     EditText editStart;
     EditText editEnd;
+    EditText editMinDistance;
+    EditText editMaxDistance;
     Button btnBuild;
     CheckBox chkFixed;
     EditText editFixedStart;
@@ -58,6 +60,8 @@ public class BuilderExampleFragment extends Fragment implements SimpleRangeView.
         editCount = (EditText) view.findViewById(R.id.edit_count);
         editStart = (EditText) view.findViewById(R.id.edit_start);
         editEnd = (EditText) view.findViewById(R.id.edit_end);
+        editMinDistance = (EditText) view.findViewById(R.id.edit_min_distance);
+        editMaxDistance = (EditText) view.findViewById(R.id.edit_max_distance);
         chkFixed = (CheckBox) view.findViewById(R.id.chk_fixed);
         editFixedStart = (EditText) view.findViewById(R.id.edit_fixed_start);
         editFixedEnd = (EditText) view.findViewById(R.id.edit_fixed_end);
@@ -77,11 +81,13 @@ public class BuilderExampleFragment extends Fragment implements SimpleRangeView.
         rangeViewsContainer.removeAllViews();
         final SimpleRangeView rangeView = new SimpleRangeView.Builder(getContext())
                 .count(getInt(editCount.getText().toString(), 10))
-                .start(getInt(editStart.getText().toString(), 2))
-                .end(getInt(editEnd.getText().toString(), 7))
+                .showFixedLine(chkFixed.isChecked())
                 .startFixed(getInt(editFixedStart.getText().toString(), 1))
                 .endFixed(getInt(editFixedEnd.getText().toString(), 8))
-                .showFixedLine(chkFixed.isChecked())
+                .start(getInt(editStart.getText().toString(), 2))
+                .end(getInt(editEnd.getText().toString(), 7))
+                .minDistance(getInt(editMinDistance.getText().toString(), 1))
+                .maxDistance(getInt(editMaxDistance.getText().toString(), 0))
                 .movable(chkMovable.isChecked())
                 .showLabels(chkLabels.isChecked())
                 .showTicks(chkTicks.isChecked())
