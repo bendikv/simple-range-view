@@ -2,69 +2,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/range_views_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:orientation="vertical">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:text="Simple RangeView with labels"/>
+            android:text="Simple RangeView with labels" />
 
         <me.bendik.simplerangeview.SimpleRangeView
             android:id="@+id/rangeview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Start"/>
+                    android:text="Start" />
+
                 <EditText
                     android:id="@+id/edit_start"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:inputType="number"
-                    android:text="0"/>
+                    android:text="0" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="End"/>
+                    android:text="End" />
+
                 <EditText
                     android:id="@+id/edit_end"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:inputType="number"
-                    android:text="9"/>
+                    android:text="9" />
             </LinearLayout>
         </LinearLayout>
 
@@ -73,52 +79,69 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:text="RangeView with fixed area"/>
+            android:text="RangeView with fixed area" />
 
         <me.bendik.simplerangeview.SimpleRangeView
             android:id="@+id/fixed_rangeview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:count="10"
-            app:start="3"
             app:end="6"
-            app:showFixedLine="true"
-            app:startFixed="2"
             app:endFixed="7"
-            />
+            app:showFixedLine="true"
+            app:start="3"
+            app:startFixed="2" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:text="RangeView with movable range"/>
+            android:text="RangeView with movable range" />
 
         <me.bendik.simplerangeview.SimpleRangeView
             android:id="@+id/rangeview_movable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:count="10"
-            app:start="3"
             app:end="6"
             app:movable="true"
-            />
+            app:start="3" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:text="RangeView with minimal range size"/>
+            android:text="RangeView with minimal range size" />
 
         <me.bendik.simplerangeview.SimpleRangeView
             android:id="@+id/rangeview_min_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:count="10"
-            app:start="2"
             app:end="8"
             app:minDistance="3"
-            />
+            app:start="2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="RangeView with gradient active line" />
+
+        <me.bendik.simplerangeview.SimpleRangeView
+            android:id="@+id/rangeview_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:activeLineColorMode="gradient"
+            app:activeLineGradientEnd="@color/colorPrimary"
+            app:activeLineGradientStart="@color/colorAccent"
+            app:count="10"
+            app:end="10"
+            app:minDistance="1"
+            app:start="0" />
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

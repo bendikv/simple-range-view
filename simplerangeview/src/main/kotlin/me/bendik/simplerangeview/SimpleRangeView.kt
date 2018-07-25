@@ -20,13 +20,14 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.RequiresApi
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import me.bendik.simplerangeview.R.attr.maxDistance
 import kotlin.properties.Delegates
 import kotlin.properties.ReadWriteProperty
 
@@ -38,6 +39,9 @@ open class SimpleRangeView @JvmOverloads constructor(
 
     var labelColor by updatePaintsAndRedraw(DEFAULT_LABEL_COLOR)
     var activeLabelColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_LABEL_COLOR)
+    var activeLineColorMode by updatePaintsAndRedraw(DEFAULT_LINE_COLOR_MODE)
+    var activeLineGradientStart by updatePaintsAndRedraw(DEFAULT_LINE_COLOR)
+    var activeLineGradientEnd by updatePaintsAndRedraw(DEFAULT_LINE_COLOR)
     var activeThumbLabelColor by updatePaintsAndRedraw(DEFAULT_ACTIVE_THUMB_LABEL_COLOR)
     var fixedLabelColor by updatePaintsAndRedraw(DEFAULT_FIXED_LABEL_COLOR)
     var fixedThumbLabelColor by updatePaintsAndRedraw(DEFAULT_FIXED_THUMB_LABEL_COLOR)
@@ -99,20 +103,20 @@ open class SimpleRangeView @JvmOverloads constructor(
 
     // Internal
 
-    lateinit private var paint: Paint
-    lateinit private var paintFixed: Paint
-    lateinit private var paintActive: Paint
-    lateinit private var paintTick: Paint
-    lateinit private var paintFixedTick: Paint
-    lateinit private var paintActiveTick: Paint
-    lateinit private var paintActiveThumb: Paint
-    lateinit private var paintFixedThumb: Paint
-    lateinit private var paintActiveFocusThumb: Paint
-    lateinit private var paintText: Paint
-    lateinit private var paintActiveText: Paint
-    lateinit private var paintFixedText: Paint
-    lateinit private var paintActiveThumbText: Paint
-    lateinit private var paintFixedThumbText: Paint
+    private lateinit var paint: Paint
+    private lateinit var paintFixed: Paint
+    private lateinit var paintActive: Paint
+    private lateinit var paintTick: Paint
+    private lateinit var paintFixedTick: Paint
+    private lateinit var paintActiveTick: Paint
+    private lateinit var paintActiveThumb: Paint
+    private lateinit var paintFixedThumb: Paint
+    private lateinit var paintActiveFocusThumb: Paint
+    private lateinit var paintText: Paint
+    private lateinit var paintActiveText: Paint
+    private lateinit var paintFixedText: Paint
+    private lateinit var paintActiveThumbText: Paint
+    private lateinit var paintFixedThumbText: Paint
 
     private var currentLeftFocusRadiusPx = ValueWrapper(0f)
     private var currentRightFocusRadiusPx = ValueWrapper(0f)
@@ -143,7 +147,10 @@ open class SimpleRangeView @JvmOverloads constructor(
             fixedThumbLabelColor = styledAttrs.getColor(R.styleable.SimpleRangeView_fixedThumbLabelColor, fixedThumbLabelColor)
 
             lineColor = styledAttrs.getColor(R.styleable.SimpleRangeView_lineColor, lineColor)
+            activeLineColorMode = styledAttrs.getInt(R.styleable.SimpleRangeView_activeLineColorMode, activeLineColorMode)
             activeLineColor = styledAttrs.getColor(R.styleable.SimpleRangeView_activeLineColor, activeLineColor)
+            activeLineGradientStart = styledAttrs.getColor(R.styleable.SimpleRangeView_activeLineGradientStart, activeLineGradientStart)
+            activeLineGradientEnd = styledAttrs.getColor(R.styleable.SimpleRangeView_activeLineGradientEnd, activeLineGradientEnd)
             fixedLineColor = styledAttrs.getColor(R.styleable.SimpleRangeView_fixedLineColor, fixedLineColor)
             tickColor = styledAttrs.getColor(R.styleable.SimpleRangeView_tickColor, tickColor)
             activeTickColor = styledAttrs.getColor(R.styleable.SimpleRangeView_activeTickColor, activeTickColor)
@@ -228,7 +235,6 @@ open class SimpleRangeView @JvmOverloads constructor(
 
         paintActive = Paint(Paint.ANTI_ALIAS_FLAG)
         paintActive.style = Paint.Style.FILL
-        paintActive.color = activeLineColor
 
         paintTick = Paint(Paint.ANTI_ALIAS_FLAG)
         paintTick.style = Paint.Style.FILL
@@ -417,6 +423,17 @@ open class SimpleRangeView @JvmOverloads constructor(
     }
 
     protected open fun drawActiveLine(canvas: Canvas, x: Float, y: Float, w: Float, h: Float) {
+        if (activeLineColorMode == ColorMode.SOLID) {
+            paintActive.color = activeLineColor
+        } else if (activeLineColorMode == ColorMode.GRADIENT) {
+            paintActive.shader = LinearGradient(
+                x, y, x + w, y + h,
+                activeLineGradientStart,
+                activeLineGradientEnd,
+                Shader.TileMode.MIRROR
+            )
+        }
+
         drawLine(canvas, x, y, w, h, paintActive)
     }
 
@@ -783,7 +800,10 @@ open class SimpleRangeView @JvmOverloads constructor(
         this.fixedLabelColor = state.fixedLabelColor
         this.fixedThumbLabelColor = state.fixedThumbLabelColor
         this.lineColor = state.lineColor
+        this.activeLineColorMode = state.activeLineColorMode
         this.activeLineColor = state.activeLineColor
+        this.activeLineGradientStart = state.activeLineGradientStart
+        this.activeLineGradientEnd = state.activeLineGradientEnd
         this.fixedLineColor = state.fixedLineColor
         this.tickColor = state.tickColor
         this.activeTickColor = state.activeTickColor
@@ -829,7 +849,10 @@ open class SimpleRangeView @JvmOverloads constructor(
         var fixedLabelColor: Int = 0
         var fixedThumbLabelColor: Int = 0
         var lineColor: Int = 0
+        var activeLineColorMode: Int = 0
         var activeLineColor: Int = 0
+        var activeLineGradientStart: Int = 0
+        var activeLineGradientEnd: Int = 0
         var fixedLineColor: Int = 0
         var tickColor: Int = 0
         var activeTickColor: Int = 0
@@ -870,55 +893,13 @@ open class SimpleRangeView @JvmOverloads constructor(
 
         internal constructor(superState: Parcelable) : super(superState)
 
-        private constructor(input: Parcel, classLoader: ClassLoader) : super(input, classLoader) {
-            this.labelColor = input.readInt()
-            this.activeLabelColor = input.readInt()
-            this.activeThumbLabelColor = input.readInt()
-            this.fixedLabelColor = input.readInt()
-            this.fixedThumbLabelColor = input.readInt()
+        private constructor(input: Parcel) : super(input) {
+            readFromParcel(input)
+        }
 
-            this.lineColor = input.readInt()
-            this.activeLineColor = input.readInt()
-            this.fixedLineColor = input.readInt()
-            this.tickColor = input.readInt()
-            this.activeTickColor = input.readInt()
-            this.fixedTickColor = input.readInt()
-            this.activeThumbColor = input.readInt()
-            this.activeFocusThumbColor = input.readInt()
-            this.fixedThumbColor = input.readInt()
-
-            this.activeFocusThumbAlpha = input.readFloat()
-
-            this.lineThickness = input.readFloat()
-            this.activeLineThickness = input.readFloat()
-            this.fixedLineThickness = input.readFloat()
-            this.activeThumbRadius = input.readFloat()
-            this.activeThumbFocusRadius = input.readFloat()
-            this.fixedThumbRadius = input.readFloat()
-            this.tickRadius = input.readFloat()
-            this.activeTickRadius = input.readFloat()
-            this.fixedTickRadius = input.readFloat()
-            this.labelMarginBottom = input.readFloat()
-            this.labelFontSize = input.readFloat()
-            this.minDistanceBetweenLabels = input.readFloat()
-            this.innerRangePadding = input.readFloat()
-            this.innerRangePaddingLeft = input.readFloat()
-            this.innerRangePaddingRight = input.readFloat()
-
-            this.count = input.readInt()
-            this.startFixed = input.readInt()
-            this.endFixed = input.readInt()
-            this.start = input.readInt()
-            this.end = input.readInt()
-            this.minDistance = input.readInt()
-            this.maxDistance = input.readInt()
-
-            this.movable = input.readInt() == 1
-            this.showFixedLine = input.readInt() == 1
-            this.showTicks = input.readInt() == 1
-            this.showActiveTicks = input.readInt() == 1
-            this.showFixedTicks = input.readInt() == 1
-            this.showLabels = input.readInt() == 1
+        @RequiresApi(Build.VERSION_CODES.N)
+        private constructor(input: Parcel, classLoader: ClassLoader?) : super(input, classLoader) {
+            readFromParcel(input)
         }
 
         override fun writeToParcel(output: Parcel, flags: Int) {
@@ -930,7 +911,10 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeInt(this.fixedThumbLabelColor)
 
             output.writeInt(this.lineColor)
+            output.writeInt(this.activeLineColorMode)
             output.writeInt(this.activeLineColor)
+            output.writeInt(this.activeLineGradientStart)
+            output.writeInt(this.activeLineGradientEnd)
             output.writeInt(this.fixedLineColor)
             output.writeInt(this.tickColor)
             output.writeInt(this.activeTickColor)
@@ -973,11 +957,71 @@ open class SimpleRangeView @JvmOverloads constructor(
             output.writeInt(if (this.showLabels) 1 else 0)
         }
 
+        private fun readFromParcel(input: Parcel) {
+            this.labelColor = input.readInt()
+            this.activeLabelColor = input.readInt()
+            this.activeThumbLabelColor = input.readInt()
+            this.fixedLabelColor = input.readInt()
+            this.fixedThumbLabelColor = input.readInt()
+
+            this.lineColor = input.readInt()
+            this.activeLineColorMode = input.readInt()
+            this.activeLineColor = input.readInt()
+            this.activeLineGradientStart = input.readInt()
+            this.activeLineGradientEnd = input.readInt()
+            this.fixedLineColor = input.readInt()
+            this.tickColor = input.readInt()
+            this.activeTickColor = input.readInt()
+            this.fixedTickColor = input.readInt()
+            this.activeThumbColor = input.readInt()
+            this.activeFocusThumbColor = input.readInt()
+            this.fixedThumbColor = input.readInt()
+
+            this.activeFocusThumbAlpha = input.readFloat()
+
+            this.lineThickness = input.readFloat()
+            this.activeLineThickness = input.readFloat()
+            this.fixedLineThickness = input.readFloat()
+            this.activeThumbRadius = input.readFloat()
+            this.activeThumbFocusRadius = input.readFloat()
+            this.fixedThumbRadius = input.readFloat()
+            this.tickRadius = input.readFloat()
+            this.activeTickRadius = input.readFloat()
+            this.fixedTickRadius = input.readFloat()
+            this.labelMarginBottom = input.readFloat()
+            this.labelFontSize = input.readFloat()
+            this.minDistanceBetweenLabels = input.readFloat()
+            this.innerRangePadding = input.readFloat()
+            this.innerRangePaddingLeft = input.readFloat()
+            this.innerRangePaddingRight = input.readFloat()
+
+            this.count = input.readInt()
+            this.startFixed = input.readInt()
+            this.endFixed = input.readInt()
+            this.start = input.readInt()
+            this.end = input.readInt()
+            this.minDistance = input.readInt()
+            this.maxDistance = input.readInt()
+
+            this.movable = input.readInt() == 1
+            this.showFixedLine = input.readInt() == 1
+            this.showTicks = input.readInt() == 1
+            this.showActiveTicks = input.readInt() == 1
+            this.showFixedTicks = input.readInt() == 1
+            this.showLabels = input.readInt() == 1
+        }
+
         companion object {
             @JvmField
             val CREATOR: Parcelable.ClassLoaderCreator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
-                override fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
-                override fun createFromParcel(input: Parcel): SavedState? = null
+                override fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState {
+                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        SavedState(source, loader)
+                    } else {
+                        SavedState(source)
+                    }
+                }
+                override fun createFromParcel(input: Parcel): SavedState = SavedState(input)
                 override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
             }
         }
@@ -1035,7 +1079,10 @@ open class SimpleRangeView @JvmOverloads constructor(
         private var fixedLabelColor: Int? = null
         private var fixedThumbLabelColor: Int? = null
         private var lineColor: Int? = null
+        private var activeLineColorMode: Int? = null
         private var activeLineColor: Int? = null
+        private var activeLineGradientStart: Int? = null
+        private var activeLineGradientEnd: Int? = null
         private var fixedLineColor: Int? = null
         private var tickColor: Int? = null
         private var activeTickColor: Int? = null
@@ -1112,8 +1159,23 @@ open class SimpleRangeView @JvmOverloads constructor(
             return this
         }
 
+        fun activeLineColorMode(colorMode: Int): Builder {
+            activeLineColorMode = colorMode
+            return this
+        }
+
         fun activeLineColor(color: Int): Builder {
             activeLineColor = color
+            return this
+        }
+
+        fun activeLineGradientStart(color: Int): Builder {
+            activeLineGradientStart = color
+            return this
+        }
+
+        fun activeLineGradientEnd(color: Int): Builder {
+            activeLineGradientEnd = color
             return this
         }
 
@@ -1336,6 +1398,9 @@ open class SimpleRangeView @JvmOverloads constructor(
             rangeView.fixedThumbLabelColor = fixedThumbLabelColor ?: rangeView.fixedThumbLabelColor
             rangeView.lineColor = lineColor ?: rangeView.lineColor
             rangeView.activeLineColor = activeLineColor ?: rangeView.activeLineColor
+            rangeView.activeLineColorMode = activeLineColorMode ?: rangeView.activeLineColorMode
+            rangeView.activeLineGradientStart = activeLineGradientStart ?: rangeView.activeLineGradientStart
+            rangeView.activeLineGradientEnd = activeLineGradientEnd ?: rangeView.activeLineGradientEnd
             rangeView.fixedLineColor = fixedLineColor ?: rangeView.fixedLineColor
             rangeView.tickColor = tickColor ?: rangeView.tickColor
             rangeView.activeTickColor = activeTickColor ?: rangeView.activeTickColor
@@ -1382,6 +1447,7 @@ open class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_FIXED_LABEL_COLOR = Color.parseColor("#C5C5C5")
         val DEFAULT_FIXED_THUMB_LABEL_COLOR = Color.parseColor("#C5C5C5")
 
+        const val DEFAULT_LINE_COLOR_MODE = ColorMode.SOLID
         val DEFAULT_LINE_COLOR = Color.parseColor("#F7F7F7")
         val DEFAULT_ACTIVE_LINE_COLOR = Color.parseColor("#0C6CE1")
         val DEFAULT_FIXED_LINE_COLOR = Color.parseColor("#E3E3E3")
@@ -1392,43 +1458,49 @@ open class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_ACTIVE_FOCUS_THUMB_COLOR = DEFAULT_ACTIVE_THUMB_COLOR
         val DEFAULT_FIXED_THUMB_COLOR = Color.parseColor("#E3E3E3")
 
-        val DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA = 1f
+        const val DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA = 1f
 
-        val DEFAULT_LINE_THICKNESS = 4f
-        val DEFAULT_ACTIVE_LINE_THICKNESS = 6f
-        val DEFAULT_FIXED_LINE_THICKNESS = 6f
+        const val DEFAULT_LINE_THICKNESS = 4f
+        const val DEFAULT_ACTIVE_LINE_THICKNESS = 6f
+        const val DEFAULT_FIXED_LINE_THICKNESS = 6f
 
-        val DEFAULT_ACTIVE_THUMB_FOCUS_RADIUS = 14f
-        val DEFAULT_ACTIVE_THUMB_RADIUS = 10f
-        val DEFAULT_FIXED_THUMB_RADIUS = 10f
+        const val DEFAULT_ACTIVE_THUMB_FOCUS_RADIUS = 14f
+        const val DEFAULT_ACTIVE_THUMB_RADIUS = 10f
+        const val DEFAULT_FIXED_THUMB_RADIUS = 10f
 
-        val DEFAULT_TICK_RADIUS = 1f
-        val DEFAULT_ACTIVE_TICK_RADIUS = 1f
-        val DEFAULT_FIXED_TICK_RADIUS = 1f
+        const val DEFAULT_TICK_RADIUS = 1f
+        const val DEFAULT_ACTIVE_TICK_RADIUS = 1f
+        const val DEFAULT_FIXED_TICK_RADIUS = 1f
 
-        val DEFAULT_INNER_RANGE_PADDING = 16f
-        val DEFAULT_INNER_RANGE_PADDING_LEFT = DEFAULT_INNER_RANGE_PADDING
-        val DEFAULT_INNER_RANGE_PADDING_RIGHT = DEFAULT_INNER_RANGE_PADDING
+        const val DEFAULT_INNER_RANGE_PADDING = 16f
+        const val DEFAULT_INNER_RANGE_PADDING_LEFT = DEFAULT_INNER_RANGE_PADDING
+        const val DEFAULT_INNER_RANGE_PADDING_RIGHT = DEFAULT_INNER_RANGE_PADDING
 
-        val DEFAULT_COUNT = 10
-        val DEFAULT_START = 0
-        val DEFAULT_END = DEFAULT_COUNT - 1
-        val DEFAULT_MINIMAL_DISTANCE = 1
-        val DEFAULT_MAXIMAL_DISTANCE = 0
+        const val DEFAULT_COUNT = 10
+        const val DEFAULT_START = 0
+        const val DEFAULT_END = DEFAULT_COUNT - 1
+        const val DEFAULT_MINIMAL_DISTANCE = 1
+        const val DEFAULT_MAXIMAL_DISTANCE = 0
 
-        val DEFAULT_START_FIXED = 0
-        val DEFAULT_END_FIXED = 0
+        const val DEFAULT_START_FIXED = 0
+        const val DEFAULT_END_FIXED = 0
 
-        val DEFAULT_SHOW_FIXED_LINE = false
-        val DEFAULT_MOVABLE = false
-        val DEFAULT_SHOW_TICKS = true
-        val DEFAULT_SHOW_ACTIVE_TICKS = true
-        val DEFAULT_SHOW_FIXED_TICKS = true
-        val DEFAULT_SHOW_LABELS = true
+        const val DEFAULT_SHOW_FIXED_LINE = false
+        const val DEFAULT_MOVABLE = false
+        const val DEFAULT_SHOW_TICKS = true
+        const val DEFAULT_SHOW_ACTIVE_TICKS = true
+        const val DEFAULT_SHOW_FIXED_TICKS = true
+        const val DEFAULT_SHOW_LABELS = true
 
-        val DEFAULT_LABEL_MARGIN_BOTTOM = 16f
-        val DEFAULT_MINIMAL_DISTANCE_BETWEEN_LABELS = 20f // TODO
+        const val DEFAULT_LABEL_MARGIN_BOTTOM = 16f
+        const val DEFAULT_MINIMAL_DISTANCE_BETWEEN_LABELS = 20f // TODO
 
-        val DEFAULT_LABEL_FONT_SIZE = 12f
+        const val DEFAULT_LABEL_FONT_SIZE = 12f
+    }
+
+    object ColorMode {
+        const val SOLID = 0
+        const val GRADIENT = 1
     }
 }
+

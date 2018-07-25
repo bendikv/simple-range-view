@@ -2,7 +2,13 @@
 <resources>
     <declare-styleable name="SimpleRangeView">
         <attr name="lineColor" format="color" />
+        <attr name="activeLineColorMode" format="enum" >
+            <enum name="solid" value="0" />
+            <enum name="gradient" value="1" />
+        </attr>
         <attr name="activeLineColor" format="color" />
+        <attr name="activeLineGradientStart" format="color" />
+        <attr name="activeLineGradientEnd" format="color" />
         <attr name="fixedLineColor" format="color" />
         <attr name="tickColor" format="color" />
         <attr name="activeTickColor" format="color" />
